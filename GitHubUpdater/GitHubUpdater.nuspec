@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>GitHubUpdater.NET</id>
+    <version>1.0.2.0</version>
+    <title>GitHubUpdater.NET</title>
+    <authors>José Cerezp</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <!-- <icon>icon.png</icon> -->
+    <projectUrl>https://github.com/joseenrique61/GitHubUpdater/tree/main</projectUrl>
+    <description>Updater created for hosting and downloading updates from GitHub for .NET Windows apps.</description>
+    <releaseNotes></releaseNotes>
+    <copyright></copyright>
+    <tags>.NET Updater GitHub</tags>
+  </metadata>
+</package>
