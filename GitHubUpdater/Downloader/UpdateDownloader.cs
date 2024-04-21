@@ -180,6 +180,11 @@ namespace GitHubUpdater.Downloader
 
         private static void UpdateShortcut(string shortcutFullPath, string newTarget)
         {
+            if (!File.Exists(shortcutFullPath))
+            {
+                return;
+            }
+
             Guid CLSID_Shell = Guid.Parse("13709620-C279-11CE-A49E-444553540000");
             dynamic shell = Activator.CreateInstance(Type.GetTypeFromCLSID(CLSID_Shell));
             Shell32.Folder folder = shell.NameSpace(Path.GetDirectoryName(shortcutFullPath));
