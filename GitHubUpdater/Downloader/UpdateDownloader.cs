@@ -74,16 +74,11 @@ namespace GitHubUpdater.Downloader
             await Task.Run(() =>
             {
                 client.BaseAddress = new Uri("https://api.github.com");
-                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Updater", GetUpdaterVersion().ToString()));
+                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Updater"));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", Token);
             });
             return client;
-        }
-
-        private static Version GetUpdaterVersion()
-        {
-            return AssemblyName.GetAssemblyName(Assembly.GetExecutingAssembly().GetName().Name + ".dll").Version;
         }
 
         public async Task Update()
