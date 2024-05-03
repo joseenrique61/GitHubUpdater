@@ -22,6 +22,7 @@ namespace GitHubUpdater.Downloader
                 try
                 {
                     shortcut.TargetPath = newTarget;
+                    shortcut.WorkingDirectory = Path.GetDirectoryName(newTarget);
                     shortcut.IconLocation = $@"{installationPath}\app.ico";
                     shortcut.Save();
                     MoveShortcut(shortcutFullPath, appName, shortcutTempPath);

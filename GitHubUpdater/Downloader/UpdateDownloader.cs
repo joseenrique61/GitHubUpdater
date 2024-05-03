@@ -58,14 +58,21 @@ namespace GitHubUpdater.Downloader
             };
 
             manager.Client = await manager.GetClient();
+            manager.SetIsInCorrectPathAndCurrentVersion();
+
             manager.SetLocalFiles();
 
-            if (manager.IsInCorrectPath)
-            {
-                manager.CurrentVersion = new Version($@"{Path.GetFileName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))}");
-            }
-
             return manager;
+        }
+
+        private void SetIsInCorrectPathAndCurrentVersion()
+        {
+            IsInCorrectPath = Version.TryParse(Path.GetFileName(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)), out Version version);
+            
+            if (IsInCorrectPath)
+            {
+                CurrentVersion = version;
+            }
         }
 
         private async Task<HttpClient> GetClient()
@@ -261,16 +268,14 @@ namespace GitHubUpdater.Downloader
 
         private void SetLocalFiles()
         {
-            try
+            if (!IsInCorrectPath) 
             {
-                using (StreamReader reader = new StreamReader($@"{InstallationPath}\{CurrentVersion}\hashes.txt"))
-                {
-                    LocalFiles = JsonSerializer.Deserialize<List<FileInformation>>(reader.ReadToEnd(), jsonOptions);
-                }
+                return;
             }
-            catch (Exception)
+
+            using (StreamReader reader = new StreamReader($@"{InstallationPath}\{CurrentVersion}\hashes.txt"))
             {
-                IsInCorrectPath = false;
+                LocalFiles = JsonSerializer.Deserialize<List<FileInformation>>(reader.ReadToEnd(), jsonOptions);
             }
         }
 
