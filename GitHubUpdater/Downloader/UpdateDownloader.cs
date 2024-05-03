@@ -74,7 +74,7 @@ namespace GitHubUpdater.Downloader
             await Task.Run(() =>
             {
                 client.BaseAddress = new Uri("https://api.github.com");
-                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Updater"));
+                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("Updater", "1.0.0"));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Token", Token);
             });
@@ -164,33 +164,13 @@ namespace GitHubUpdater.Downloader
                 File.Delete(path);
             }
 
-            File.WriteAllText(path, await Client.GetStringAsync(file.DownloadUrl));
+            File.WriteAllBytes(path, await Client.GetByteArrayAsync(file.DownloadUrl));
         }
 
         private void CopyFile(FileInformation file)
         {
             Directory.CreateDirectory($@"{NewPath}\{Path.GetDirectoryName(file.Path)}");
             File.Copy($@"{InstallationPath}\{CurrentVersion}\{file.Path}", $@"{InstallationPath}\{NewVersion}\{file.Path}");
-        }
-
-        private static void UpdateShortcut(string shortcutFullPath, string newTarget)
-        {
-            if (!File.Exists(shortcutFullPath))
-            {
-                return;
-            }
-
-            Guid CLSID_Shell = Guid.Parse("13709620-C279-11CE-A49E-444553540000");
-            dynamic shell = Activator.CreateInstance(Type.GetTypeFromCLSID(CLSID_Shell));
-            Shell32.Folder folder = shell.NameSpace(Path.GetDirectoryName(shortcutFullPath));
-            Shell32.FolderItem folderItem = folder.Items().Item(Path.GetFileName(shortcutFullPath));
-
-            Shell32.ShellLinkObject currentLink = (Shell32.ShellLinkObject)folderItem.GetLink;
-
-            currentLink.Path = newTarget;
-            currentLink.WorkingDirectory = Path.GetDirectoryName(newTarget);
-
-            currentLink.Save();
         }
 
         private async Task CreateHashesFile()
@@ -205,7 +185,7 @@ namespace GitHubUpdater.Downloader
         {
             foreach (string shortcut in ShortcutPaths)
             {
-                UpdateShortcut(shortcut, $@"{NewPath}\{AppName}.exe");
+                ShortcutUpdater.UpdateShortcut(shortcut, $@"{NewPath}\{AppName}.exe", AppName, $@"{InstallationPath}\{NewVersion}");
             }
         }
 

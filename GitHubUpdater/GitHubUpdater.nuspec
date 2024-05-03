@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>GitHubUpdater.NET</id>
-    <version>1.0.4.0</version>
+    <version>$version$</version>
     <title>GitHubUpdater.NET</title>
     <authors>José Cerezo</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
